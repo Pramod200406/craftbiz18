@@ -1,6 +1,4 @@
-const API_BASE_URL = typeof window !== "undefined" && window.location.hostname
-  ? `http://${window.location.hostname}:8000`
-  : "http://localhost:8000";
+const API_BASE_URL = "/api";
 
 async function request(endpoint, options = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
@@ -30,7 +28,7 @@ export const api = {
   getImageUrl: (relativeUrl) => {
     if (!relativeUrl) return "";
     if (relativeUrl.startsWith("http")) return relativeUrl;
-    return `${API_BASE_URL}${relativeUrl}`;
+    return relativeUrl.startsWith("/") ? relativeUrl : `/${relativeUrl}`;
   },
 
   // System
