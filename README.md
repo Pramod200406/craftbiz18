@@ -1,6 +1,6 @@
 # 🎨 CRAFTBIZ AI
-### AI-Powered Virtual Business Manager & Digital Commerce Ecosystem for Indian Artisans
-**Designed for Smart India Hackathon 2026**
+### AI-Powered Virtual Business Manager & Cross-Platform Digital Commerce Ecosystem for Indian Artisans
+**Built for Smart India Hackathon (SIH) 2026**
 
 ---
 
@@ -8,14 +8,16 @@
 
 **CRAFTBIZ AI** bridges the digital divide for millions of rural and traditional Indian craftspeople. Handcrafted art, handlooms, and heritage GI crafts represent India's rich cultural legacy, yet artisans frequently face exploitation by middlemen, lack professional product photography, encounter language barriers when cataloging products, struggle with fair pricing, and face logistical hurdles reaching national buyers.
 
-CRAFTBIZ AI solves this with a **unified AI ecosystem**:
-1. **🌐 First-Screen Trilingual Experience**: Instant selection between **English**, **ಕನ್ನಡ (Kannada)**, and **हिन्दी (Hindi)** with a centralized dynamic translation system.
-2. **🎙 Multilingual Voice Catalogue**: Artisans speak naturally in regional languages. **OpenAI Whisper** transcribes speech and our NLP engine extracts product entities (name, material, cost, selling price, stock).
-3. **🎨 4-Step AI Product Studio**: Transforms casual smartphone photos into e-commerce studio-grade listings via **Pillow ImageEnhance** (color, contrast, sharpness) and **rembg** (background removal with luxury neutral studio canvas).
-4. **💰 Algorithmic Smart Pricing**: Computes fair pricing based on production costs, craft category multipliers (e.g., Terracotta, Bamboo, Handloom, Woodcraft, Bidriware, Jewellery, Jute), and market demand indices (Low, Medium, High).
-5. **🛍 Flipkart/Amazon-Inspired Marketplace**: With **Deal of the Day** carousel, promotional banners, 7 craft categories, search, price/authenticity filters, and persistent cart checkout.
-6. **🤝 Multi-Dimensional AI Buyer Matching**: Recommends artisan products to corporate buyers based on budget brackets, bulk quantity requirements, artisan capacity, and regional proximity with compatibility scores (e.g. 94%).
-7. **🚚 Courier Logistics Hub & Animated Live Tracker**: Rural first-mile cluster pickup feed, express dispatch, 5-stage animated tracking pipeline with moving truck, and **secure 4-digit OTP handover verification (Demo OTP: `1234`)**.
+CRAFTBIZ AI solves this with a **robust, scalable, and cross-platform mobile-friendly AI ecosystem**:
+1. **🌐 Bilingual Experience (English & हिन्दी)**: Clean, high-impact language switcher across the entire platform with instant translation.
+2. **🎙 NLP Voice-to-SEO Description Engine**: Artisans describe their craft via voice notes in regional languages or English. **OpenAI Whisper AI** transcribes and an advanced NLP engine automatically generates **SEO-friendly, professional, high-converting product descriptions in both English and Hindi**, complete with SEO titles, bullet points, hashtags, and care instructions.
+3. **🎨 4-Step AI Product Studio**: Transforms smartphone photos into e-commerce studio-grade listings via **Pillow ImageEnhance** (color, contrast, sharpness) and **rembg** (background removal with luxury neutral studio canvas).
+4. **💰 Algorithmic Smart Pricing & Automated Demand Forecasting**: Backend AI automatically forecasts market demand based on upcoming 30-day festival schedules (Navratri, Dussehra, Diwali, wedding season) and craft category velocity, ensuring fair living wages (Fair Wage Index 9.5+/10).
+5. **🛍 Meesho/Flipkart-Inspired Marketplace**: With **Deal of the Day** carousel, promotional badges, 7 craft categories, search, price/authenticity filters, and persistent cart checkout.
+6. **🤝 Multi-Dimensional AI Buyer Matching**: Recommends artisan products to retail and bulk buyers based on budget brackets, volume requirements, artisan capacity, and regional proximity with compatibility scores (e.g. 96%).
+7. **🚚 Shipment Partner Logistics Hub & Animated Live Tracker**: Rural first-mile cluster pickup feed, express dispatch, 5-stage animated tracking pipeline with moving truck, and **secure 4-digit OTP delivery handover verification (Demo OTP: `1234`)**.
+8. **🛡️ Ecosystem Admin Control Center**: Real-time governance dashboard providing full visibility into artisan registrations, order fulfillment, GI authenticity verification, and catalogue moderation.
+9. **📱 Mobile-First & Accessible for Low-Literacy Users**: Clean minimalist visual hierarchy with a persistent **Mobile Bottom Navigation Bar (`MobileBottomNav.jsx`)**, tactile touch targets, clear iconography, and voice-forward guidance.
 
 ---
 
@@ -36,62 +38,77 @@ CRAFTBIZ_AI/
 │   │   ├── courier.py          # Available pickups, accept, ship, deliver with OTP
 │   │   ├── products.py         # Product CRUD, image upload, enhance, rembg studio
 │   │   ├── orders.py           # Order creation, status updates, tracking
-│   │   ├── pricing.py          # Algorithmic smart pricing endpoint
-│   │   ├── voice.py            # Whisper audio transcription & entity parsing
+│   │   ├── pricing.py          # Algorithmic smart pricing & demand forecast
+│   │   ├── voice.py            # Whisper audio transcription & NLP SEO engine
+│   │   ├── admin.py            # Platform metrics, catalogue moderation, system reset
 │   │   └── matching.py         # Multi-factor AI recommendation engine
 │   ├── services/
 │   │   ├── image_service.py    # Pillow ImageEnhance + rembg background cutout
-│   │   ├── pricing_service.py  # Category & demand economic pricing model
+│   │   ├── pricing_service.py  # Future-days festival demand engine & pricing
 │   │   ├── matching_service.py # Vector compatibility scoring (0-100%)
-│   │   └── voice_service.py    # OpenAI Whisper speech-to-entities pipeline
-│   └── uploads/                # Processed images and audio files
+│   │   └── voice_service.py    # Whisper transcription + bilingual NLP SEO engine
+│   └── uploads/                # Processed images and voice audio files
 └── frontend/
     ├── src/
-    │   ├── translations/       # Centralized dictionaries (en.json, kn.json, hi.json)
+    │   ├── translations/       # Centralized dictionaries (en.json, hi.json)
     │   ├── context/            # LanguageContext with persistent storage
     │   ├── services/           # Centralized API service client (api.js)
     │   ├── components/
-    │   │   ├── LanguageModal.jsx     # First screen: 3-language selector
-    │   │   ├── Navbar.jsx            # Brand, language dropdown, role switcher, cart
-    │   │   ├── Homepage.jsx          # Hero, SIH 2026 badges, 3 user roles
-    │   │   ├── ArtisanDashboard.jsx  # AI Studio, Voice Catalogue, Pricing, Orders
+    │   │   ├── LanguageModal.jsx     # First screen: English & Hindi selector
+    │   │   ├── Navbar.jsx            # Brand, language toggle, role switcher, cart
+    │   │   ├── MobileBottomNav.jsx   # Mobile bottom navigation bar for low-literacy
+    │   │   ├── Homepage.jsx          # Hero, SIH 2026 badges, 4 user roles
+    │   │   ├── ArtisanDashboard.jsx  # AI Studio, Voice Catalogue, NLP SEO, Pricing
     │   │   ├── BuyerDashboard.jsx    # Marketplace, Deal of the Day, AI Matching
     │   │   ├── CartDrawer.jsx        # Persistent cart, address checkout, confetti
-    │   │   └── CourierDashboard.jsx  # Available pickups, animated logistics tracker
+    │   │   ├── CourierDashboard.jsx  # Shipment partner portal & logistics tracker
+    │   │   └── AdminDashboard.jsx    # Ecosystem governance & moderation center
     │   ├── App.jsx
     │   └── index.css           # Tailwind CSS v4 & custom glassmorphism styling
+    ├── index.html              # PWA and cross-platform mobile viewport configuration
     ├── package.json
     └── vite.config.js
 ```
 
 ---
 
-## 👥 Three Dedicated Dashboards
+## 👥 Four Tailored Portals
 
-The platform strictly features three tailored operational dashboards (no admin or judge dashboards):
+### 1. 🎨 Artisan Command Center
+- **NLP Voice-to-SEO Engine**: Speak in Hindi, English, or any regional dialect. The AI extracts structured entities and drafts **SEO-optimized listings in both English and Hindi** with 1-tap form application.
+- **AI Product Studio**: 4-stage visual pipeline with before/after previews (original ➔ Pillow enhanced ➔ rembg cutout ➔ marketplace ready).
+- **Backend-Driven Dynamic Pricing**: Automatically accounts for raw material indices, GI heritage authenticity, master craftsmanship wages, and upcoming festival season demand surges.
+- Order management with one-click **"Mark Ready for Pickup"**.
 
-1. **🎨 Artisan Dashboard**:
-   - Total products, orders, pending pickups, delivered items, total revenue.
-   - Revenue analytics chart & product health metrics.
-   - **AI Product Studio**: 4-stage visual pipeline with before/after previews.
-   - **Voice Catalogue**: Live recording, presets (Kannada, Hindi, English), entity extraction.
-   - **Smart Pricing**: Interactive cost & demand sliders with Fair Wage Index.
-   - Order management with one-click **"Mark Ready for Pickup"**.
+### 2. 🛍️ Buyer Marketplace (B2B & Retail)
+- Deal of the Day carousel with ratings and discount badges.
+- 7 Indian heritage craft categories: *Terracotta, Bamboo Crafts, Handloom, Woodcraft, Jewellery, Metal Crafts, Jute Crafts*.
+- Search, filter by price/authenticity score, sort options.
+- Product details modal with GI Authenticity (95%+), Visual Quality (90%+), and Fair Price Index (9.5/10).
+- **AI Buyer Matching**: Compatibility match scores (e.g. 96%) with explainable recommendation rationale.
+- Multi-item shopping cart with persistent state and one-click checkout.
 
-2. **🛍️ Buyer Dashboard**:
-   - Deal of the Day carousel with ratings and discount badges.
-   - 7 Indian heritage craft categories: *Terracotta, Bamboo Crafts, Handloom, Woodcraft, Jewellery, Metal Crafts, Jute Crafts*.
-   - Search, filter by price/authenticity score, sort options.
-   - Product details modal with GI Authenticity (95%+), Visual Quality (90%+), and Fair Price Index (9.4/10).
-   - **AI Buyer Matching**: Compatibility match scores (e.g. 96%) with AI rationale.
-   - Multi-item shopping cart with persistent state and one-click checkout.
+### 3. 🚚 Shipment Partner Portal
+- Real-time **Available Cluster Pickups** waiting at artisan workshops.
+- One-click pickup acceptance into active fleet.
+- **Mark Shipped** status trigger.
+- **Animated Logistics Tracker**: Moving truck across 5 stages (*Pending ➔ Ready for Pickup ➔ Accepted by Shipment Partner ➔ In Express Transit ➔ Delivered to Buyer*).
+- **Delivery Handover with OTP**: Secure 4-digit verification (**Demo OTP: `1234`**).
 
-3. **🚚 Courier Dashboard**:
-   - Real-time **Available Cluster Pickups** waiting at artisan workshops.
-   - One-click pickup acceptance into active fleet.
-   - **Ship Consignment** status trigger.
-   - **Animated Logistics Tracker**: Moving truck across 5 stages (*Pending ➔ Ready for Pickup ➔ Accepted by Courier ➔ Shipped ➔ Delivered*).
-   - **Delivery Handover with OTP**: Secure 4-digit verification (**Demo OTP: `1234`**).
+### 4. 🛡️ Ecosystem Admin Control Center
+- Real-time KPIs: Registered Artisans, Active Catalogue, Total Orders, Platform GMV, Average Fair Wage Rating.
+- Multi-stakeholder lifecycle audit from artisan creation to shipment handover.
+- Regional heritage cluster monitoring (Channapatna, Bankura, Varanasi, Bidar, Kutch).
+- Catalogue moderation and demonstration dataset presets.
+
+---
+
+## 📱 Mobile-First Design & Low-Literacy Accessibility
+
+- **Mobile Bottom Navigation Bar (`MobileBottomNav.jsx`)**: Designed with native mobile app ergonomics (56px touch height, clear icons, bilingual labels).
+- **Voice-First Prompts**: High-visibility microphone badges (**"🎙️ Voice / बोलें"**) guide low-literacy artisans to speak instead of typing.
+- **Cross-Platform PWA Ready**: Configured with `viewport-fit=cover`, `mobile-web-app-capable`, and instant tap response (`touch-manipulation`). Users can install it directly to their smartphone home screens.
+- **Native App Packaging**: Fully compatible with **Capacitor / React Native** to export native Android `.apk` and iOS `.ipa` builds.
 
 ---
 
@@ -106,26 +123,18 @@ The platform strictly features three tailored operational dashboards (no admin o
 ```bash
 cd backend
 
-# Optional: create & activate virtual environment
-python -m venv venv
-# Windows:
-venv\Scripts\activate
-# macOS/Linux:
-# source venv/bin/activate
-
 # Install dependencies
 pip install -r requirements.txt
 
-# Run database seeder (seeds authentic Indian crafts & users)
+# Seed authentic Indian crafts & master artisans
 python seed.py
 
 # Start FastAPI server
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 - API Base: `http://localhost:8000`
 - Interactive Swagger API Docs: `http://localhost:8000/docs`
-- Redoc Documentation: `http://localhost:8000/redoc`
 
 ### 3. Frontend Setup
 
@@ -136,31 +145,10 @@ cd frontend
 npm install
 
 # Start Vite development server
-npm run dev
+npm run dev -- --host
 ```
 
 - Frontend App: `http://localhost:5173`
-
----
-
-## 🔄 Complete End-to-End Demonstration Journey
-
-1. **🌐 Select Language**:
-   - On opening the app, select your preferred language: **🇬🇧 English**, **🇮🇳 ಕನ್ನಡ**, or **🇮🇳 हिन्दी**.
-2. **👤 Choose Role**:
-   - Explore the **Homepage** and click **"I am an Artisan"**, **"I am a Buyer"**, or **"I am a Courier"**.
-3. **🎨 Artisan Flow**:
-   - Go to **Voice Catalogue** ➔ Click one of the 1-click sample presets (e.g. *Channapatna Woodcraft in Kannada*) ➔ Watch Whisper AI transcribe and extract product details ➔ Click **Publish**.
-   - Go to **AI Product Studio** ➔ Click **Apply AI Enhancement** (Pillow) ➔ Click **Remove Background** (rembg) ➔ View studio-grade certification.
-   - Check **Recent Orders** ➔ Click **Mark Ready for Pickup** for pending orders.
-4. **🛍 Buyer Flow**:
-   - Switch to **Buyer Marketplace** ➔ Browse **Deal of the Day** and craft categories.
-   - Open **🤝 AI Buyer Matching** tab ➔ Review compatibility scores (94%) and AI explanations.
-   - Click **Add to Cart** ➔ Open Cart drawer ➔ Enter delivery address ➔ Click **Place Verified Order** (enjoy the celebration confetti 🎉).
-5. **🚚 Courier Flow**:
-   - Switch to **Courier Logistics** ➔ Go to **Available Pickups** ➔ Click **Accept Pickup**.
-   - Under **My Deliveries**, click **Mark as Shipped** ➔ Watch the animated truck and progress bar move to "In Transit".
-   - Click **Verify OTP & Deliver** ➔ Enter Demo OTP: `1234` ➔ Confirm delivery!
 
 ---
 
@@ -168,5 +156,6 @@ npm run dev
 
 - **Event**: Smart India Hackathon (SIH) 2026
 - **Project**: CRAFTBIZ AI
-- **Demonstration Credentials**: Pre-seeded with authentic master artisans from Channapatna (Karnataka), Bankura (West Bengal), Bidar (Karnataka), Madhubani (Bihar), and Mayurbhanj (Odisha).
+- **GitHub Repository**: [https://github.com/Pramod200406/craftbiz18.git](https://github.com/Pramod200406/craftbiz18.git)
 - **Demo Delivery OTP**: `1234`
+- **Zero Middlemen Guarantee**: 100% direct fair wages paid to artisan clusters.
