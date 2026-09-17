@@ -24,6 +24,7 @@ async def transcribe_voice(file: UploadFile = File(...)):
     return TranscribeResponse(
         text=result.get("text", ""),
         translated_text=result.get("translated_text", ""),
+        translated_hindi=result.get("translated_hindi", ""),
         language=result.get("language", "en"),
         confidence=result.get("confidence", 0.95)
     )

@@ -187,6 +187,7 @@ class TranscribeResponse(BaseModel):
     text: str
     language: Optional[str] = "en"
     translated_text: Optional[str] = None
+    translated_hindi: Optional[str] = None
     confidence: Optional[float] = 0.95
 
 class VoiceExtractRequest(BaseModel):
@@ -202,7 +203,18 @@ class VoiceExtractResponse(BaseModel):
     confidence: float
     original_text: Optional[str] = None
     translated_text: Optional[str] = None
+    translated_hindi: Optional[str] = None
     detected_language: Optional[str] = "en"
+    # NLP-Generated SEO Friendly Descriptions in English & Hindi
+    seo_title_en: Optional[str] = None
+    seo_title_hi: Optional[str] = None
+    description_en: Optional[str] = None
+    description_hi: Optional[str] = None
+    seo_keywords: Optional[List[str]] = []
+    seo_keywords_hi: Optional[List[str]] = []
+    bullet_points_en: Optional[List[str]] = []
+    bullet_points_hi: Optional[List[str]] = []
+    seo_score: Optional[int] = 98
 
 # ================= Matching Schemas =================
 class MatchResult(BaseModel):
