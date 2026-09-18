@@ -52,7 +52,7 @@ export const MobileBottomNav = ({ currentView, setCurrentView, setCurrentRole, c
   return (
     <nav 
       aria-label="Mobile Navigation"
-      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-lg border-t border-slate-800/90 shadow-[0_-8px_20px_rgba(0,0,0,0.4)] px-2 py-1.5 pb-safe"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#24040b]/95 backdrop-blur-lg border-t border-[#540d1e]/90 shadow-[0_-8px_20px_rgba(36,4,11,0.7)] px-2 py-1.5 pb-safe"
     >
       <div className="flex items-center justify-around max-w-md mx-auto">
         {navItems.map((item) => {
@@ -68,13 +68,13 @@ export const MobileBottomNav = ({ currentView, setCurrentView, setCurrentRole, c
               }}
               className={`relative flex flex-col items-center justify-center flex-1 py-1.5 px-1 rounded-2xl transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? 'text-amber-400 font-black'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'text-amber-300 font-black'
+                  : 'text-rose-200/60 hover:text-rose-100'
               }`}
             >
               {/* Active pill background */}
               {isActive && (
-                <span className="absolute inset-0 bg-amber-500/15 rounded-2xl border border-amber-500/30 -z-10 animate-in fade-in zoom-in-95 duration-150" />
+                <span className="absolute inset-0 bg-[#891d35]/40 rounded-2xl border border-amber-400/40 -z-10 animate-in fade-in zoom-in-95 duration-150 shadow-sm" />
               )}
 
               {/* Icon / Emoji for Low-Literacy Accessibility */}

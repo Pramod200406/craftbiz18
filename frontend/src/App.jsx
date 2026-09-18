@@ -74,7 +74,7 @@ function AppContent() {
   const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-amber-400 selection:text-slate-950 font-sans">
+    <div className="min-h-screen flex flex-col bg-[#fdf8f9] text-[#24040b] selection:bg-[#891d35] selection:text-amber-200 font-sans">
       
       {/* 🌐 FIRST SCREEN: Language Selection Modal */}
       <LanguageModal />
@@ -123,20 +123,22 @@ function AppContent() {
       />
 
       {/* Global Footer */}
-      <footer className="bg-slate-950 text-white border-t border-slate-800 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <footer className="bg-gradient-to-b from-[#24040b] via-[#1c0308] to-[#120105] text-white border-t border-[#540d1e] py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        {/* Subtle mandala watermark in footer */}
+        <div className="absolute inset-0 bg-[url('/theme-pattern.png')] bg-center opacity-5 pointer-events-none mix-blend-screen" />
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black text-xl flex items-center justify-center shadow">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#891d35] via-[#a82644] to-[#f3b954] text-white font-black text-xl flex items-center justify-center shadow-lg shadow-[#891d35]/30">
               🎨
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-black text-lg text-white">CRAFTBIZ<span className="text-amber-400">.AI</span></span>
+                <span className="font-black text-lg text-white tracking-tight">CRAFTBIZ<span className="text-amber-400">.AI</span></span>
                 <span className="text-[10px] font-bold px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded border border-amber-500/30">
                   SIH 2026
                 </span>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-rose-200/70">
                 AI-Powered Virtual Business Manager & Digital Commerce Ecosystem for Indian Artisans
               </p>
             </div>

@@ -246,29 +246,31 @@ export const CourierDashboard = () => {
       )}
 
       {/* Shipment Top Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-teal-950 to-emerald-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-emerald-500/20">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-emerald-500 text-slate-950 font-black text-3xl flex items-center justify-center shadow-lg shadow-emerald-500/30">
+      <div className="bg-gradient-to-r from-[#24040b] via-[#3b0713] to-[#701328] rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6 border border-amber-400/30 relative overflow-hidden">
+        {/* Subtle mandala watermark */}
+        <div className="absolute inset-0 bg-[url('/theme-pattern.png')] bg-center bg-cover opacity-15 pointer-events-none mix-blend-screen" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#891d35] to-[#f3b954] text-white font-black text-3xl flex items-center justify-center shadow-lg shadow-[#891d35]/40">
             🚚
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-2xl sm:text-3xl font-black">{courier?.organization_name || "New Shipment Partner"}</h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold border border-emerald-500/30">
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-xs font-bold border border-amber-400/30">
                 Verified Shipment Partner
               </span>
             </div>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1">
+            <p className="text-rose-100/80 text-xs sm:text-sm mt-1">
               Field Agent: <span className="font-bold text-white">{courier?.name || "Agent"}</span> • Operating Zone: {courier?.location || "India"}
             </p>
           </div>
         </div>
 
         {/* Action Tabs & Switch Courier */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative z-10">
           <button
             onClick={() => setShowCourierModal(true)}
-            className="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-emerald-300 text-xs font-bold rounded-xl border border-slate-700 transition-all flex items-center gap-1"
+            className="px-3 py-2 bg-[#24040b] hover:bg-[#540d1e] text-amber-300 text-xs font-bold rounded-xl border border-amber-400/30 transition-all flex items-center gap-1"
           >
             <UserPlus className="w-3.5 h-3.5" />
             <span>New Partner</span>

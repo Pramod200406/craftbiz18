@@ -37,11 +37,13 @@ export const LanguageModal = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-amber-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#170207]/85 backdrop-blur-md p-4 animate-in fade-in duration-300">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-rose-200">
         {/* Header Ribbon */}
-        <div className="bg-gradient-to-r from-slate-950 via-indigo-950 to-amber-950 p-6 sm:p-8 text-white relative">
-          <div className="flex items-center gap-3.5 mb-2">
+        <div className="bg-gradient-to-r from-[#24040b] via-[#3b0713] to-[#701328] p-6 sm:p-8 text-white relative overflow-hidden">
+          {/* Subtle pattern */}
+          <div className="absolute inset-0 bg-[url('/theme-pattern.png')] bg-center bg-cover opacity-15 pointer-events-none mix-blend-screen" />
+          <div className="flex items-center gap-3.5 mb-2 relative z-10">
             <div className="p-3 bg-amber-500/20 backdrop-blur rounded-2xl border border-amber-400/40 text-amber-400">
               <Globe className="w-8 h-8 animate-spin-slow" />
             </div>
@@ -52,7 +54,7 @@ export const LanguageModal = () => {
               </h1>
             </div>
           </div>
-          <p className="text-slate-300 text-xs sm:text-sm max-w-xl mt-1">
+          <p className="text-rose-100/80 text-xs sm:text-sm max-w-xl mt-1 relative z-10">
             Select your preferred language. You can change this anytime from the top bar.
           </p>
         </div>
@@ -68,18 +70,18 @@ export const LanguageModal = () => {
                   onClick={() => handleSelect(item.code)}
                   className={`group relative text-left p-5 rounded-2xl border-2 transition-all duration-200 flex flex-col justify-between cursor-pointer ${
                     isSelected
-                      ? 'border-amber-500 bg-amber-50/70 shadow-lg shadow-amber-500/10 scale-[1.02]'
-                      : 'border-slate-200 hover:border-amber-300 hover:bg-slate-50 bg-white'
+                      ? 'border-[#891d35] bg-[#fff5f7] shadow-lg shadow-[#891d35]/15 scale-[1.02]'
+                      : 'border-slate-200 hover:border-rose-300 hover:bg-[#fff9fa] bg-white'
                   }`}
                 >
                   {isSelected && (
-                    <div className="absolute top-3 right-3 text-amber-600">
-                      <CheckCircle className="w-6 h-6 fill-amber-500 text-white" />
+                    <div className="absolute top-3 right-3 text-[#891d35]">
+                      <CheckCircle className="w-6 h-6 fill-[#891d35] text-white" />
                     </div>
                   )}
                   <div>
                     <div className="text-3xl mb-2">{item.flag}</div>
-                    <div className="text-2xl font-black text-slate-900 group-hover:text-amber-700 transition-colors">
+                    <div className="text-2xl font-black text-slate-900 group-hover:text-[#891d35] transition-colors">
                       {item.native}
                     </div>
                     <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">
@@ -105,7 +107,7 @@ export const LanguageModal = () => {
             </div>
             <button
               onClick={handleConfirm}
-              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 text-white font-semibold rounded-xl shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-3.5 bg-gradient-to-r from-[#891d35] via-[#a82644] to-[#701328] text-amber-200 border border-amber-400/40 font-bold rounded-xl shadow-lg shadow-[#891d35]/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
             >
               <span>{t('enter_app', 'Continue to CraftBiz')}</span>
               <ArrowRight className="w-4 h-4" />

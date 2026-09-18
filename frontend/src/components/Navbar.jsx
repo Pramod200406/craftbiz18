@@ -34,7 +34,7 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-xl">
+    <header className="sticky top-0 z-40 w-full bg-[#3b0713]/95 backdrop-blur-md border-b border-[#540d1e] text-white shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-2">
         
         {/* Brand Logo */}
@@ -42,34 +42,34 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
           onClick={() => setCurrentView('home')} 
           className="flex items-center gap-3 cursor-pointer group flex-shrink-0"
         >
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 via-orange-500 to-amber-300 p-0.5 shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center text-2xl">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#891d35] via-[#a82644] to-[#f3b954] p-0.5 shadow-md shadow-[#891d35]/40 group-hover:scale-105 transition-transform">
+            <div className="w-full h-full bg-[#24040b] rounded-[14px] flex items-center justify-center text-2xl">
               🎨
             </div>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xl sm:text-2xl font-black tracking-tight text-white group-hover:text-amber-400 transition-colors">
-                CRAFTBIZ<span className="text-amber-500">.AI</span>
+              <span className="text-xl sm:text-2xl font-black tracking-tight text-white group-hover:text-amber-300 transition-colors">
+                CRAFTBIZ<span className="text-amber-400">.AI</span>
               </span>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-amber-500/20 border border-amber-500/30 text-amber-300 rounded-full hidden sm:inline-block">
+              <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 bg-amber-500/20 border border-amber-400/40 text-amber-300 rounded-full hidden sm:inline-block">
                 SIH 2026
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 hidden lg:block">
+            <p className="text-[11px] text-rose-200/70 hidden lg:block">
               India's AI Artisan Digital Ecosystem
             </p>
           </div>
         </div>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-950/70 p-1.5 rounded-2xl border border-slate-800">
+        <nav className="hidden md:flex items-center gap-1 bg-[#24040b]/80 p-1.5 rounded-2xl border border-[#540d1e]">
           <button
             onClick={() => setCurrentView('home')}
             className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
               currentView === 'home'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-bold'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-[#891d35] to-[#a82644] text-amber-200 border border-amber-400/40 shadow-md shadow-[#891d35]/50 font-bold'
+                : 'text-rose-100/80 hover:text-white hover:bg-[#540d1e]/60'
             }`}
           >
             {t('nav_home', 'Home')}
@@ -78,8 +78,8 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
             onClick={() => { setCurrentRole('artisan'); setCurrentView('artisan'); }}
             className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               currentView === 'artisan'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-bold'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-[#891d35] to-[#a82644] text-amber-200 border border-amber-400/40 shadow-md shadow-[#891d35]/50 font-bold'
+                : 'text-rose-100/80 hover:text-white hover:bg-[#540d1e]/60'
             }`}
           >
             <span>🎨</span>
@@ -89,8 +89,8 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
             onClick={() => { setCurrentRole('buyer'); setCurrentView('buyer'); }}
             className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               currentView === 'buyer'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-bold'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-[#891d35] to-[#a82644] text-amber-200 border border-amber-400/40 shadow-md shadow-[#891d35]/50 font-bold'
+                : 'text-rose-100/80 hover:text-white hover:bg-[#540d1e]/60'
             }`}
           >
             <span>🛍️</span>
@@ -100,8 +100,8 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
             onClick={() => { setCurrentRole('courier'); setCurrentView('courier'); }}
             className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               currentView === 'courier'
-                ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/30 font-bold'
-                : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-gradient-to-r from-[#891d35] to-[#a82644] text-amber-200 border border-amber-400/40 shadow-md shadow-[#891d35]/50 font-bold'
+                : 'text-rose-100/80 hover:text-white hover:bg-[#540d1e]/60'
             }`}
           >
             <span>🚚</span>
@@ -111,8 +111,8 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
             onClick={() => { setCurrentRole('admin'); setCurrentView('admin'); }}
             className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
               currentView === 'admin'
-                ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30 font-bold'
-                : 'text-rose-300 hover:text-white hover:bg-rose-950/50'
+                ? 'bg-[#891d35] text-amber-200 border border-amber-400/40 shadow-md shadow-[#891d35]/50 font-bold'
+                : 'text-rose-200 hover:text-white hover:bg-[#540d1e]/60'
             }`}
           >
             <span>🛡️</span>
@@ -124,11 +124,11 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
         <div className="flex items-center gap-2 sm:gap-3">
           
           {/* BIG PROMINENT LANGUAGE SWITCHER (User Request: "give language changing option a big first") */}
-          <div className="flex items-center bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-amber-500/10 border-2 border-amber-400/50 rounded-2xl p-1 shadow-md">
+          <div className="flex items-center bg-gradient-to-r from-[#891d35]/30 via-amber-500/20 to-[#891d35]/20 border-2 border-amber-400/60 rounded-2xl p-1 shadow-md">
             <button
               onClick={reopenLanguageModal}
               title="Open Full Language Selector"
-              className="px-2.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-black rounded-xl text-xs flex items-center gap-1 shadow transition-all mr-1"
+              className="px-2.5 py-1.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black rounded-xl text-xs flex items-center gap-1 shadow transition-all mr-1"
             >
               <Globe className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Language</span>
@@ -136,7 +136,7 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-slate-900/90 text-white text-xs sm:text-sm font-extrabold px-3 py-1.5 rounded-xl border border-amber-500/40 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer shadow-inner"
+              className="bg-[#24040b] text-amber-100 text-xs sm:text-sm font-extrabold px-3 py-1.5 rounded-xl border border-amber-500/40 focus:outline-none focus:ring-2 focus:ring-amber-400 cursor-pointer shadow-inner"
             >
               <option value="en">🇬🇧 English</option>
               <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
@@ -148,7 +148,7 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
             onClick={handleResetData}
             disabled={resetting}
             title="Wipe database and start fresh"
-            className="hidden xl:flex items-center gap-1 px-2.5 py-2 bg-slate-800 hover:bg-rose-950/60 text-slate-400 hover:text-rose-300 border border-slate-700 hover:border-rose-500/40 rounded-xl text-xs font-semibold transition-all"
+            className="hidden xl:flex items-center gap-1 px-2.5 py-2 bg-[#24040b] hover:bg-[#540d1e] text-rose-200/80 hover:text-rose-100 border border-[#540d1e] hover:border-rose-400/40 rounded-xl text-xs font-semibold transition-all"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>{resetting ? 'Resetting...' : 'Clear'}</span>
@@ -157,12 +157,12 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
           {/* Cart Icon Button */}
           <button
             onClick={openCart}
-            className="relative p-2.5 bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/30 text-amber-400 rounded-xl transition-all"
+            className="relative p-2.5 bg-[#891d35]/30 hover:bg-[#891d35]/50 border border-amber-400/40 text-amber-300 rounded-xl transition-all shadow-sm"
             title={t('nav_cart', 'Cart')}
           >
             <ShoppingBag className="w-5 h-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-orange-600 text-white text-[11px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-900 shadow">
+              <span className="absolute -top-1.5 -right-1.5 bg-[#a82644] text-white text-[11px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-[#24040b] shadow">
                 {cartCount}
               </span>
             )}
@@ -172,12 +172,12 @@ export const Navbar = ({ currentView, setCurrentView, currentRole, setCurrentRol
       </div>
 
       {/* Mobile Accessible Status Banner (Low-Literacy Friendly) */}
-      <div className="md:hidden flex items-center justify-between py-1.5 px-4 bg-slate-950/90 border-t border-slate-800/80 text-xs">
+      <div className="md:hidden flex items-center justify-between py-1.5 px-4 bg-[#24040b]/95 border-t border-[#540d1e]/80 text-xs">
         <div className="flex items-center gap-1.5">
           <span className="text-sm">{currentRoleInfo.icon}</span>
           <span className="font-extrabold text-white text-xs">{currentRoleInfo.label}</span>
         </div>
-        <div className="flex items-center gap-1.5 text-[11px] text-amber-400/90 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20 font-semibold">
+        <div className="flex items-center gap-1.5 text-[11px] text-amber-300 bg-amber-500/20 px-2 py-0.5 rounded-full border border-amber-400/30 font-semibold">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
           <span>{t('badge_voice', 'Voice AI')} Active</span>
         </div>

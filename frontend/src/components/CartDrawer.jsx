@@ -60,14 +60,14 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRem
         <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col justify-between border-l border-slate-200">
           
           {/* Header */}
-          <div className="p-6 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-            <h2 className="text-lg font-black text-slate-900 flex items-center gap-2">
+          <div className="p-6 border-b border-[#540d1e] flex items-center justify-between bg-gradient-to-r from-[#24040b] via-[#3b0713] to-[#540d1e] text-white">
+            <h2 className="text-lg font-black text-white flex items-center gap-2">
               <span>🛍️</span>
               <span>{t('cart_title', 'Your Procurement Cart')}</span>
             </h2>
             <button
               onClick={() => { setOrderPlaced(false); onClose(); }}
-              className="p-2 hover:bg-slate-200 rounded-full text-slate-500 transition-colors"
+              className="p-2 hover:bg-[#701328] rounded-full text-rose-200 hover:text-white transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -182,16 +182,16 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRem
                 </div>
                 <div className="flex justify-between text-sm font-black text-slate-900 pt-2 border-t border-slate-200">
                   <span>{t('total', 'Total Consignment Value')}</span>
-                  <span className="text-lg text-indigo-600">₹{total.toLocaleString('en-IN')}</span>
+                  <span className="text-lg text-[#891d35] font-black">₹{total.toLocaleString('en-IN')}</span>
                 </div>
               </div>
 
               <button
                 onClick={handleCheckout}
                 disabled={submitting}
-                className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-black text-sm rounded-xl shadow-lg shadow-indigo-500/25 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3.5 bg-gradient-to-r from-[#891d35] via-[#a82644] to-[#701328] hover:from-[#701328] hover:to-[#891d35] text-amber-200 border border-amber-400/40 font-black text-sm rounded-xl shadow-lg shadow-[#891d35]/30 transition-all flex items-center justify-center gap-2"
               >
-                <ShieldCheck className="w-4 h-4" />
+                <ShieldCheck className="w-4 h-4 text-amber-300" />
                 <span>{submitting ? 'Placing Order...' : t('place_order', 'Place Verified Order')}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>

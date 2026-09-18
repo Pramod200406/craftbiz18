@@ -109,16 +109,18 @@ export const AdminDashboard = () => {
       )}
 
       {/* Admin Header Ribbon */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-bold mb-2">
-            <ShieldCheck className="w-3.5 h-3.5" />
+      <div className="bg-gradient-to-r from-[#24040b] via-[#3b0713] to-[#701328] text-white rounded-3xl p-6 sm:p-8 border border-[#540d1e] shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+        {/* Subtle mandala watermark */}
+        <div className="absolute inset-0 bg-[url('/theme-pattern.png')] bg-center bg-cover opacity-15 pointer-events-none mix-blend-screen" />
+        <div className="relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/40 text-xs font-bold mb-2">
+            <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
             <span>{t('admin_portal_badge', 'Platform Governance & SIH 2026 Overseer')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
             🛡️ {t('admin_title', 'Ecosystem Admin Control Center')}
           </h1>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1 max-w-2xl">
+          <p className="text-rose-100/80 text-xs sm:text-sm mt-1 max-w-2xl">
             {t('admin_subtitle', 'Real-time multi-stakeholder governance across Indian artisan clusters, retail & bulk buyers, shipment logistics, and automated AI pricing verification.')}
           </p>
         </div>

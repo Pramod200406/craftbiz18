@@ -55,16 +55,19 @@ export const Homepage = ({ onSelectRole }) => {
     <div className="space-y-16 pb-20">
       
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white rounded-b-[40px] shadow-2xl border-b border-amber-500/20">
+      <section className="relative overflow-hidden pt-12 pb-20 bg-gradient-to-b from-[#24040b] via-[#3b0713] to-[#540d1e] text-white rounded-b-[40px] shadow-2xl border-b border-[#701328]">
         
-        {/* Glow ambient spots */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Subtle mandala background pattern from theme image */}
+        <div className="absolute inset-0 bg-[url('/theme-pattern.png')] bg-center bg-cover opacity-15 pointer-events-none mix-blend-screen" />
+        
+        {/* Glow ambient spots in theme colors */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#891d35]/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-8">
           
           {/* Hackathon Header Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/80 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-semibold shadow-inner">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#24040b]/90 border border-amber-400/40 text-amber-300 text-xs sm:text-sm font-semibold shadow-inner">
             <Sparkles className="w-4 h-4 text-amber-400" />
             <span>Smart India Hackathon 2026 Innovation</span>
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
@@ -75,26 +78,26 @@ export const Homepage = ({ onSelectRole }) => {
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-tight">
               🎨 {t('hero_title', "India's Artisans. Powered by AI.")}
             </h1>
-            <p className="max-w-3xl mx-auto text-base sm:text-xl text-slate-300 font-normal leading-relaxed">
+            <p className="max-w-3xl mx-auto text-base sm:text-xl text-rose-100/90 font-normal leading-relaxed">
               {t('hero_subtitle', 'Transforming traditional handlooms, pottery, and heritage crafts into thriving digital businesses with state-of-the-art Voice AI, Studio Enhancements, and Smart Logistics.')}
             </p>
           </div>
 
           {/* Key Value Points */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs sm:text-sm font-medium text-slate-300">
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-800/60 rounded-lg border border-slate-700/60">
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs sm:text-sm font-medium text-rose-100/90">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#24040b]/70 rounded-lg border border-[#701328]">
               <CheckCircle2 className="w-4 h-4 text-amber-400" />
               <span>Studio-Grade Photography</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-800/60 rounded-lg border border-slate-700/60">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#24040b]/70 rounded-lg border border-[#701328]">
               <CheckCircle2 className="w-4 h-4 text-amber-400" />
               <span>Multilingual Voice Cataloging</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-800/60 rounded-lg border border-slate-700/60">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#24040b]/70 rounded-lg border border-[#701328]">
               <CheckCircle2 className="w-4 h-4 text-amber-400" />
               <span>Direct Fair-Trade Marketplace</span>
             </div>
-            <div className="flex items-center gap-1.5 px-3 py-1 bg-slate-800/60 rounded-lg border border-slate-700/60">
+            <div className="flex items-center gap-1.5 px-3 py-1 bg-[#24040b]/70 rounded-lg border border-[#701328]">
               <CheckCircle2 className="w-4 h-4 text-amber-400" />
               <span>OTP-Verified Logistics</span>
             </div>
@@ -102,23 +105,22 @@ export const Homepage = ({ onSelectRole }) => {
 
           {/* Premium Feature Badges Row */}
           <div className="pt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
-            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-500/20 to-orange-500/20 border border-amber-500/40 text-amber-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
+            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#891d35]/40 to-[#a82644]/40 border border-amber-400/40 text-amber-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
               <span>🎨</span> {t('badge_studio', 'AI Product Studio')}
             </span>
-            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-500/40 text-purple-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
+            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#701328]/50 to-[#891d35]/40 border border-amber-400/40 text-amber-200 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
               <span>🎙</span> {t('badge_voice', 'Voice Catalogue')}
             </span>
-            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-500/40 text-emerald-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
+            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#891d35]/40 to-[#a82644]/40 border border-amber-400/40 text-amber-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
               <span>💰</span> {t('badge_pricing', 'Smart Pricing')}
             </span>
-            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-500/40 text-blue-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
+            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#701328]/50 to-[#891d35]/40 border border-amber-400/40 text-amber-200 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
               <span>🤝</span> {t('badge_matching', 'AI Buyer Matching')}
             </span>
-            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-rose-500/20 to-pink-500/20 border border-rose-500/40 text-rose-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
+            <span className="px-4 py-2 rounded-2xl bg-gradient-to-r from-[#891d35]/40 to-[#a82644]/40 border border-amber-400/40 text-amber-300 text-xs sm:text-sm font-bold shadow flex items-center gap-2">
               <span>🚚</span> {t('badge_logistics', 'Smart Logistics')}
             </span>
           </div>
-
         </div>
       </section>
 
