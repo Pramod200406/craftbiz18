@@ -505,6 +505,17 @@ export const ArtisanDashboard = () => {
         available_quantity: details.quantity
       }));
 
+      // Auto-sync extracted cost & category to Smart Pricing engine
+      if (details.production_cost && details.category) {
+        setPricingInput({
+          cost: parseFloat(details.production_cost),
+          category: details.category
+        });
+        api.suggestPricing(parseFloat(details.production_cost), details.category)
+          .then(res => setPricingResult(res))
+          .catch(() => {});
+      }
+
       showNotification(`✨ AI NLP Engine: Extracted ${details.name} & generated SEO descriptions in English and Hindi!`);
     } catch (err) {
       showNotification(err.message || 'Error extracting craft entities', 'error');
@@ -518,7 +529,7 @@ export const ArtisanDashboard = () => {
     await handleTranslateAndExtract(sampleText);
   };
 
-  // Save new product
+  // Save new product & auto-transfer production cost and category to AI Smart Pricing
   const handleSaveProduct = async (e) => {
     e.preventDefault();
     if (!artisan?.id) {
@@ -527,17 +538,32 @@ export const ArtisanDashboard = () => {
     }
     setLoading(true);
     try {
+      const prodCost = parseFloat(productForm.production_cost) || 0;
+      const prodCategory = productForm.category;
+
       const newProd = await api.createProduct({
         artisan_id: artisan.id,
         name: productForm.name,
-        category: productForm.category,
+        category: prodCategory,
         material: productForm.material,
         description: productForm.description,
-        production_cost: parseFloat(productForm.production_cost),
+        production_cost: prodCost,
         selling_price: parseFloat(productForm.selling_price),
         available_quantity: parseInt(productForm.available_quantity)
       });
-      showNotification(`"${newProd.name}" published to CraftBiz Marketplace!`);
+
+      // Automatically sync production cost and category to AI Smart Pricing
+      setPricingInput({
+        cost: prodCost,
+        category: prodCategory
+      });
+
+      // Immediately auto-calculate smart pricing recommendation with future demand
+      api.suggestPricing(prodCost, prodCategory)
+        .then(res => setPricingResult(res))
+        .catch(err => console.error("Auto smart pricing failed:", err));
+
+      showNotification(`"${newProd.name}" cataloged! Production cost (₹${prodCost}) & category (${prodCategory}) automatically synced to AI Smart Pricing!`);
       setSelectedProductForStudio(newProd);
       setActiveTab('studio');
       loadDashboard();
@@ -1634,6 +1660,29 @@ export const ArtisanDashboard = () => {
             {/* Input Controls */}
             <div className="bg-slate-50 p-6 rounded-3xl border border-slate-200 space-y-6">
               
+              {/* Auto-Sync Indicator from Product Catalog */}
+              <div className="p-3.5 bg-gradient-to-r from-[#891d35]/10 via-amber-500/10 to-[#891d35]/5 rounded-2xl border border-amber-400/40 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">⚡</span>
+                  <div>
+                    <div className="text-xs font-black text-slate-900 flex items-center gap-1.5">
+                      <span>Auto-Synced from Product Catalog</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                    </div>
+                    <div className="text-[11px] text-slate-600 font-medium">
+                      Category: <strong className="text-[#891d35]">{pricingInput.category}</strong> • Production Cost: <strong className="text-[#891d35]">₹{pricingInput.cost}</strong>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCalculatePricing}
+                  className="px-3 py-1.5 bg-[#891d35] hover:bg-[#701328] text-amber-200 text-xs font-bold rounded-xl shadow transition-all whitespace-nowrap"
+                >
+                  Recalculate
+                </button>
+              </div>
+
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <label className="text-xs font-bold text-slate-700">{t('production_cost', 'Production Cost (₹)')}</label>

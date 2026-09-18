@@ -4,6 +4,14 @@
 
 ---
 
+## 🌐 Live Demo & Instant Cloud Access
+
+- 🚀 **Live Web Application (GitHub Pages)**: [https://pramod200406.github.io/craftbiz18/](https://pramod200406.github.io/craftbiz18/)
+- ☁️ **Instant 1-Click Cloud Runtime (GitHub Codespaces)**: [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Pramod200406/craftbiz18)
+- 📦 **GitHub Repository**: [https://github.com/Pramod200406/craftbiz18](https://github.com/Pramod200406/craftbiz18)
+
+---
+
 ## 🌟 Executive Summary
 
 **CRAFTBIZ AI** bridges the digital divide for millions of rural and traditional Indian craftspeople. Handcrafted art, handlooms, and heritage GI crafts represent India's rich cultural legacy, yet artisans frequently face exploitation by middlemen, lack professional product photography, encounter language barriers when cataloging products, struggle with fair pricing, and face logistical hurdles reaching national buyers.
@@ -11,13 +19,14 @@
 CRAFTBIZ AI solves this with a **robust, scalable, and cross-platform mobile-friendly AI ecosystem**:
 1. **🌐 Bilingual Experience (English & हिन्दी)**: Clean, high-impact language switcher across the entire platform with instant translation.
 2. **🎙 NLP Voice-to-SEO Description Engine**: Artisans describe their craft via voice notes in regional languages or English. **OpenAI Whisper AI** transcribes and an advanced NLP engine automatically generates **SEO-friendly, professional, high-converting product descriptions in both English and Hindi**, complete with SEO titles, bullet points, hashtags, and care instructions.
-3. **🎨 4-Step AI Product Studio**: Transforms smartphone photos into e-commerce studio-grade listings via **Pillow ImageEnhance** (color, contrast, sharpness) and **rembg** (background removal with luxury neutral studio canvas).
-4. **💰 Algorithmic Smart Pricing & Automated Demand Forecasting**: Backend AI automatically forecasts market demand based on upcoming 30-day festival schedules (Navratri, Dussehra, Diwali, wedding season) and craft category velocity, ensuring fair living wages (Fair Wage Index 9.5+/10).
-5. **🛍 Meesho/Flipkart-Inspired Marketplace**: With **Deal of the Day** carousel, promotional badges, 7 craft categories, search, price/authenticity filters, and persistent cart checkout.
-6. **🤝 Multi-Dimensional AI Buyer Matching**: Recommends artisan products to retail and bulk buyers based on budget brackets, volume requirements, artisan capacity, and regional proximity with compatibility scores (e.g. 96%).
-7. **🚚 Shipment Partner Logistics Hub & Animated Live Tracker**: Rural first-mile cluster pickup feed, express dispatch, 5-stage animated tracking pipeline with moving truck, and **secure 4-digit OTP delivery handover verification (Demo OTP: `1234`)**.
-8. **🛡️ Ecosystem Admin Control Center**: Real-time governance dashboard providing full visibility into artisan registrations, order fulfillment, GI authenticity verification, and catalogue moderation.
-9. **📱 Mobile-First & Accessible for Low-Literacy Users**: Clean minimalist visual hierarchy with a persistent **Mobile Bottom Navigation Bar (`MobileBottomNav.jsx`)**, tactile touch targets, clear iconography, and voice-forward guidance.
+3. **⚡ Auto-Sync from Catalog to AI Smart Pricing**: As soon as a product is extracted or saved into the catalog, its **production cost** and **category** are automatically propagated to the **AI Smart Pricing** engine and instantly recalculated, saving artisans from manual data re-entry and guaranteeing fair wage margins.
+4. **🎨 4-Step AI Product Studio**: Transforms smartphone photos into e-commerce studio-grade listings via **Pillow ImageEnhance** (color, contrast, sharpness) and **rembg** (background removal with luxury neutral studio canvas).
+5. **💰 Algorithmic Smart Pricing & Automated Demand Forecasting**: Backend AI automatically forecasts market demand based on upcoming 30-day festival schedules (Navratri, Dussehra, Diwali, wedding season) and craft category velocity, ensuring fair living wages (Fair Wage Index 9.5+/10).
+6. **🛍 Meesho/Flipkart-Inspired Marketplace**: With **Deal of the Day** carousel, promotional badges, 7 craft categories, search, price/authenticity filters, and persistent cart checkout.
+7. **🤝 Multi-Dimensional AI Buyer Matching**: Recommends artisan products to retail and bulk buyers based on budget brackets, volume requirements, artisan capacity, and regional proximity with compatibility scores (e.g. 96%).
+8. **🚚 Shipment Partner Logistics Hub & Animated Live Tracker**: Rural first-mile cluster pickup feed, express dispatch, 5-stage animated tracking pipeline with moving truck, and **secure 4-digit OTP delivery handover verification (Demo OTP: `1234`)**.
+9. **🛡️ Ecosystem Admin Control Center**: Real-time governance dashboard providing full visibility into artisan registrations, order fulfillment, GI authenticity verification, and catalogue moderation.
+10. **📱 Mobile-First & Accessible for Low-Literacy Users**: Clean minimalist visual hierarchy with a persistent **Mobile Bottom Navigation Bar (`MobileBottomNav.jsx`)**, tactile touch targets, clear iconography, voice-forward guidance, and authentic Indian Royal Maroon & Gold aesthetic.
 
 ---
 
