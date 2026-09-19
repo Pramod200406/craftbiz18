@@ -51,6 +51,13 @@ export const AdminDashboard = () => {
 
   useEffect(() => {
     loadAdminData();
+    const handleSync = () => loadAdminData();
+    window.addEventListener('craftbiz_order_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('craftbiz_order_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, []);
 
   const handleDeleteProduct = async (productId, prodName) => {

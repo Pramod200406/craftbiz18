@@ -64,6 +64,14 @@ export const CourierDashboard = () => {
     } else {
       setShowCourierModal(true);
     }
+
+    const handleSync = () => loadData();
+    window.addEventListener('craftbiz_order_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('craftbiz_order_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [courier?.id]);
 
   const showNotification = (msg) => {
@@ -102,6 +110,7 @@ export const CourierDashboard = () => {
       showNotification(`Consignment #${orderId} accepted! Shifted to your active fleet.`);
       loadData();
       setActiveTab('deliveries');
+      window.dispatchEvent(new CustomEvent('craftbiz_order_updated', { detail: { order_id: orderId, status: 'Accepted by Courier' } }));
     } catch (err) {
       showNotification(err.message, 'error');
     }
@@ -112,6 +121,7 @@ export const CourierDashboard = () => {
       await api.shipOrder(courier.id, orderId);
       showNotification(`Consignment #${orderId} is now In Transit!`);
       loadData();
+      window.dispatchEvent(new CustomEvent('craftbiz_order_updated', { detail: { order_id: orderId, status: 'Shipped' } }));
     } catch (err) {
       showNotification(err.message, 'error');
     }
@@ -124,8 +134,10 @@ export const CourierDashboard = () => {
       return;
     }
 
+    const orderIdToDeliver = otpModalOrder.order_id || otpModalOrder.id;
+
     try {
-      await api.deliverOrder(courier.id, otpModalOrder.order_id, '1234');
+      await api.deliverOrder(courier.id, orderIdToDeliver, '1234');
       
       confetti({
         particleCount: 80,
@@ -138,6 +150,7 @@ export const CourierDashboard = () => {
       setEnteredOtp('');
       setOtpError('');
       loadData();
+      window.dispatchEvent(new CustomEvent('craftbiz_order_updated', { detail: { order_id: orderIdToDeliver, status: 'Delivered' } }));
     } catch (err) {
       setOtpError(err.message);
     }
@@ -420,33 +433,37 @@ export const CourierDashboard = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {availableOrders.map((ord) => (
-                <div 
-                  key={ord.order_id} 
-                  className="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-4 hover:border-emerald-400 transition-all"
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-slate-900">Order #{ord.order_id}</span>
-                      <span className="text-sm font-black text-emerald-600">₹{ord.order_value}</span>
-                    </div>
-                    <h4 className="text-sm font-bold text-slate-800">{ord.product_name} (Qty: {ord.quantity})</h4>
-
-                    <div className="space-y-1 text-xs text-slate-600 pt-2 border-t border-slate-200">
-                      <div><strong className="text-slate-800">Pickup:</strong> {ord.artisan_name} ({ord.pickup_location})</div>
-                      <div><strong className="text-slate-800">Deliver To:</strong> {ord.delivery_address}</div>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handleAcceptOrder(ord.order_id)}
-                    className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5"
+              {availableOrders.map((ord) => {
+                const orderId = ord.order_id || ord.id;
+                const orderValue = ord.order_value || ord.total_amount || 549;
+                return (
+                  <div 
+                    key={orderId} 
+                    className="bg-slate-50 rounded-2xl p-5 border border-slate-200 flex flex-col justify-between space-y-4 hover:border-emerald-400 transition-all"
                   >
-                    <Truck className="w-4 h-4" />
-                    <span>{t('accept_pickup', 'Accept Pickup')}</span>
-                  </button>
-                </div>
-              ))}
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-black text-slate-900">Order #{orderId}</span>
+                        <span className="text-sm font-black text-emerald-600">₹{orderValue}</span>
+                      </div>
+                      <h4 className="text-sm font-bold text-slate-800">{ord.product_name || 'Handicraft Consignment'} (Qty: {ord.quantity || 1})</h4>
+
+                      <div className="space-y-1 text-xs text-slate-600 pt-2 border-t border-slate-200">
+                        <div><strong className="text-slate-800">Pickup:</strong> {ord.artisan_name || 'Master Artisan'} ({ord.pickup_location || 'Cluster'})</div>
+                        <div><strong className="text-slate-800">Deliver To:</strong> {ord.delivery_address || 'India'}</div>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => handleAcceptOrder(orderId)}
+                      className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5"
+                    >
+                      <Truck className="w-4 h-4" />
+                      <span>{t('accept_pickup', 'Accept Pickup')}</span>
+                    </button>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
@@ -480,63 +497,68 @@ export const CourierDashboard = () => {
             </div>
           ) : (
             <div className="space-y-4">
-              {assignedOrders.map((ord) => (
-                <div
-                  key={ord.order_id}
-                  onClick={() => setSelectedOrderForTracking(ord)}
-                  className={`p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
-                    selectedOrderForTracking?.order_id === ord.order_id
-                      ? 'border-emerald-500 bg-emerald-50/40 shadow-sm'
-                      : 'border-slate-200 bg-slate-50 hover:bg-white'
-                  }`}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-slate-900 text-sm">Order #{ord.order_id}</span>
-                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
-                        ord.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' :
-                        ord.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
-                        'bg-indigo-100 text-indigo-800'
-                      }`}>
-                        {ord.status}
-                      </span>
+              {assignedOrders.map((ord) => {
+                const orderId = ord.order_id || ord.id;
+                const orderValue = ord.order_value || ord.total_amount || 549;
+                const isSelected = (selectedOrderForTracking?.order_id === orderId) || (selectedOrderForTracking?.id === orderId);
+                return (
+                  <div
+                    key={orderId}
+                    onClick={() => setSelectedOrderForTracking(ord)}
+                    className={`p-5 rounded-2xl border-2 transition-all cursor-pointer flex flex-col md:flex-row items-start md:items-center justify-between gap-4 ${
+                      isSelected
+                        ? 'border-emerald-500 bg-emerald-50/40 shadow-sm'
+                        : 'border-slate-200 bg-slate-50 hover:bg-white'
+                    }`}
+                  >
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900 text-sm">Order #{orderId}</span>
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-black ${
+                          ord.status === 'Delivered' ? 'bg-emerald-100 text-emerald-800' :
+                          ord.status === 'Shipped' ? 'bg-blue-100 text-blue-800' :
+                          'bg-indigo-100 text-indigo-800'
+                        }`}>
+                          {ord.status}
+                        </span>
+                      </div>
+                      <div className="text-xs font-semibold text-slate-800">
+                        {ord.product_name || 'Handicraft Consignment'} • Value: ₹{orderValue}
+                      </div>
+                      <div className="text-[11px] text-slate-500">
+                        Destination: {ord.delivery_address || 'India'}
+                      </div>
                     </div>
-                    <div className="text-xs font-semibold text-slate-800">
-                      {ord.product_name} • Value: ₹{ord.order_value}
-                    </div>
-                    <div className="text-[11px] text-slate-500">
-                      Destination: {ord.delivery_address}
+
+                    <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                      {(ord.status === 'Accepted by Courier' || ord.status === 'Accepted') && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleShipOrder(orderId); }}
+                          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition-all"
+                        >
+                          {t('mark_shipped', 'Mark as Shipped')}
+                        </button>
+                      )}
+
+                      {ord.status === 'Shipped' && (
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setOtpModalOrder(ord); setOtpError(''); }}
+                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition-all flex items-center gap-1.5"
+                        >
+                          <KeyRound className="w-3.5 h-3.5" />
+                          <span>Verify OTP & Deliver</span>
+                        </button>
+                      )}
+
+                      {ord.status === 'Delivered' && (
+                        <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                          <CheckCircle2 className="w-4 h-4" /> Delivered (OTP Verified)
+                        </span>
+                      )}
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-                    {ord.status === 'Accepted by Courier' && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); handleShipOrder(ord.order_id); }}
-                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow transition-all"
-                      >
-                        {t('mark_shipped', 'Mark as Shipped')}
-                      </button>
-                    )}
-
-                    {ord.status === 'Shipped' && (
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setOtpModalOrder(ord); setOtpError(''); }}
-                        className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition-all flex items-center gap-1.5"
-                      >
-                        <KeyRound className="w-3.5 h-3.5" />
-                        <span>Verify OTP & Deliver</span>
-                      </button>
-                    )}
-
-                    {ord.status === 'Delivered' && (
-                      <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
-                        <CheckCircle2 className="w-4 h-4" /> Delivered (OTP Verified)
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

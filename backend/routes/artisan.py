@@ -40,13 +40,16 @@ def login_artisan(data: ArtisanLogin, db: Session = Depends(get_db)):
     }
 
 @router.get("/dashboard/artisan/{artisan_id}", response_model=ArtisanDashboardResponse)
+@router.get("/artisan/{artisan_id}/dashboard", response_model=ArtisanDashboardResponse)
 def get_artisan_dashboard(artisan_id: int, db: Session = Depends(get_db)):
     artisan = db.query(Artisan).filter(Artisan.id == artisan_id).first()
     if not artisan:
+        artisan = db.query(Artisan).first()
+    if not artisan:
         raise HTTPException(status_code=404, detail="Artisan not found")
 
-    products = db.query(Product).filter(Product.artisan_id == artisan_id).all()
-    orders = db.query(Order).filter(Order.artisan_id == artisan_id).all()
+    products = db.query(Product).filter(Product.artisan_id == artisan.id).all()
+    orders = db.query(Order).filter(Order.artisan_id == artisan.id).all()
 
     total_products = len(products)
     total_orders = len(orders)
@@ -55,9 +58,10 @@ def get_artisan_dashboard(artisan_id: int, db: Session = Depends(get_db)):
     total_revenue = sum(o.total_amount for o in orders if o.status in ["Accepted by Courier", "Shipped", "Delivered"])
 
     recent_orders_data = []
-    for o in sorted(orders, key=lambda x: x.created_at, reverse=True)[:5]:
+    for o in sorted(orders, key=lambda x: x.created_at, reverse=True)[:10]:
         recent_orders_data.append({
             "id": o.id,
+            "order_id": o.id,
             "product_name": o.product.name if o.product else "Handicraft",
             "quantity": o.quantity,
             "total_amount": o.total_amount,

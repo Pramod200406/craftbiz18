@@ -150,6 +150,16 @@ export const BuyerDashboard = ({ onAddToCart, onSwitchToArtisan }) => {
     } else {
       setShowBuyerModal(true);
     }
+
+    const handleSync = () => {
+      fetchOrders();
+    };
+    window.addEventListener('craftbiz_order_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('craftbiz_order_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [buyer?.id]);
 
   const showNotification = (msg) => {

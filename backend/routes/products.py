@@ -64,9 +64,11 @@ def get_all_products(category: str = None, search: str = None, db: Session = Dep
 def get_artisan_products(artisan_id: int, db: Session = Depends(get_db)):
     artisan = db.query(Artisan).filter(Artisan.id == artisan_id).first()
     if not artisan:
+        artisan = db.query(Artisan).first()
+    if not artisan:
         raise HTTPException(status_code=404, detail="Artisan not found")
 
-    products = db.query(Product).filter(Product.artisan_id == artisan_id).order_by(Product.id.desc()).all()
+    products = db.query(Product).filter(Product.artisan_id == artisan.id).order_by(Product.id.desc()).all()
     results = []
     for p in products:
         item = ProductResponse.model_validate(p)

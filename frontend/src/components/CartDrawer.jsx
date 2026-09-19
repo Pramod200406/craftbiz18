@@ -40,6 +40,8 @@ export const CartDrawer = ({ isOpen, onClose, cartItems, onUpdateQuantity, onRem
         origin: { y: 0.6 }
       });
 
+      window.dispatchEvent(new CustomEvent('craftbiz_order_updated', { detail: { action: 'order_created' } }));
+
       setOrderPlaced(true);
       setLastOrderDetails({
         count: cartItems.length,

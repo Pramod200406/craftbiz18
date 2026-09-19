@@ -117,6 +117,13 @@ export const ArtisanDashboard = () => {
 
   useEffect(() => {
     loadDashboard();
+    const handleSync = () => loadDashboard();
+    window.addEventListener('craftbiz_order_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('craftbiz_order_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
   }, [artisan?.id]);
 
   useEffect(() => {
@@ -175,6 +182,7 @@ export const ArtisanDashboard = () => {
       await api.markOrderReady(orderId);
       showNotification(`Order #${orderId} marked Ready for Pickup! Courier notified.`);
       loadDashboard();
+      window.dispatchEvent(new CustomEvent('craftbiz_order_updated', { detail: { order_id: orderId, status: 'Ready for Pickup' } }));
     } catch (err) {
       showNotification(err.message, 'error');
     }

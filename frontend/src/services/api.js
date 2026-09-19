@@ -168,15 +168,56 @@ function handleFallback(endpoint, options = {}) {
   if (path.startsWith('/artisan/') && path.endsWith('/dashboard')) {
     const prods = getStoredProducts();
     const orders = getStoredOrders();
+    const prodsMap = {};
+    prods.forEach(p => { prodsMap[p.id] = p; });
+
+    const deliveredCount = orders.filter(o => o.status === 'Delivered').length;
+    const pendingCount = orders.filter(o => o.status === 'Pending' || o.status === 'Ready for Pickup').length;
+    const totalRev = orders
+      .filter(o => ['Accepted by Courier', 'Accepted', 'Shipped', 'Delivered'].includes(o.status))
+      .reduce((sum, o) => sum + (o.total_amount || 0), 0);
+
+    const recentOrders = orders.slice(0, 10).map(o => ({
+      id: o.id,
+      order_id: o.id,
+      product_name: o.product_name || prodsMap[o.product_id]?.name || 'Heritage Craft',
+      quantity: o.quantity || 1,
+      total_amount: o.total_amount || 549,
+      order_value: o.total_amount || 549,
+      status: o.status,
+      buyer_name: o.buyer_name || 'Anita Sharma',
+      created_at: o.created_at || 'Today'
+    }));
+
     return {
+      artisan_name: FALLBACK_ARTISANS[0].name,
       artisan: FALLBACK_ARTISANS[0],
+      total_products: prods.length,
+      total_orders: orders.length,
+      pending_orders: pendingCount,
+      delivered_orders: deliveredCount,
+      revenue: totalRev,
+      recent_orders: recentOrders,
       stats: {
         products_count: prods.length,
         orders_count: orders.length,
-        total_revenue: orders.reduce((sum, o) => sum + (o.total_amount || 0), 0),
+        total_revenue: totalRev,
         avg_rating: 4.9
       },
-      recent_orders: orders.slice(0, 5)
+      revenue_chart: [
+        { month: 'Apr', revenue: Math.round(totalRev * 0.12) },
+        { month: 'May', revenue: Math.round(totalRev * 0.18) },
+        { month: 'Jun', revenue: Math.round(totalRev * 0.15) },
+        { month: 'Jul', revenue: Math.round(totalRev * 0.22) },
+        { month: 'Aug', revenue: Math.round(totalRev * 0.28) },
+        { month: 'Sep', revenue: Math.round(totalRev * 0.35 + 1200) }
+      ],
+      product_performance: prods.slice(0, 4).map(p => ({
+        name: p.name,
+        stock: p.available_quantity,
+        views: (p.authenticity_score || 95) * 12,
+        price: p.selling_price
+      }))
     };
   }
 
@@ -373,44 +414,107 @@ function handleFallback(endpoint, options = {}) {
   }
 
   if (path.includes('/ready') && method === 'PUT') {
-    const parts = path.split('/');
-    const orderId = parseInt(parts[2]);
-    const allOrders = getStoredOrders().map(o => o.id === orderId ? { ...o, status: 'Ready for Pickup' } : o);
+    const match = path.match(/(?:orders|order)\/(\d+)\/ready/);
+    const orderId = match ? parseInt(match[1]) : parseInt(path.split('/').filter(Boolean)[1] || 0);
+    const allOrders = getStoredOrders().map(o => (o.id === orderId || o.order_id === orderId) ? { ...o, status: 'Ready for Pickup' } : o);
     saveStoredOrders(allOrders);
-    return { success: true, message: 'Order marked Ready for Pickup' };
+    return { success: true, message: 'Order marked Ready for Pickup', order_id: orderId, status: 'Ready for Pickup' };
   }
 
   // 8. Courier / Shipment
   if (path === '/courier/available-orders') {
-    return getStoredOrders().filter(o => o.status === 'Ready for Pickup');
+    const prods = getStoredProducts();
+    const prodsMap = {};
+    prods.forEach(p => { prodsMap[p.id] = p; });
+    const artisans = FALLBACK_ARTISANS;
+    return getStoredOrders()
+      .filter(o => o.status === 'Ready for Pickup')
+      .map(o => {
+        const prod = prodsMap[o.product_id] || {};
+        const art = artisans.find(a => a.id === o.artisan_id) || artisans[0];
+        return {
+          id: o.id,
+          order_id: o.id,
+          product_name: o.product_name || prod.name || 'Handcrafted Heritage Craft',
+          quantity: o.quantity || 1,
+          total_amount: o.total_amount || 549,
+          order_value: o.total_amount || 549,
+          artisan_name: o.artisan_name || art.name || 'Meenakshi Bai',
+          pickup_location: o.pickup_location || art.location || 'Channapatna, Karnataka',
+          delivery_address: o.delivery_address || 'India',
+          buyer_name: o.buyer_name || 'Anita Sharma',
+          status: o.status,
+          created_at: o.created_at || 'Just now'
+        };
+      });
   }
 
   if (path.startsWith('/courier/') && path.endsWith('/orders')) {
-    return getStoredOrders();
+    const prods = getStoredProducts();
+    const prodsMap = {};
+    prods.forEach(p => { prodsMap[p.id] = p; });
+    const artisans = FALLBACK_ARTISANS;
+    return getStoredOrders().map(o => {
+      const prod = prodsMap[o.product_id] || {};
+      const art = artisans.find(a => a.id === o.artisan_id) || artisans[0];
+      return {
+        id: o.id,
+        order_id: o.id,
+        product_name: o.product_name || prod.name || 'Handcrafted Heritage Craft',
+        quantity: o.quantity || 1,
+        total_amount: o.total_amount || 549,
+        order_value: o.total_amount || 549,
+        artisan_name: o.artisan_name || art.name || 'Meenakshi Bai',
+        pickup_location: o.pickup_location || art.location || 'Channapatna, Karnataka',
+        delivery_address: o.delivery_address || 'India',
+        buyer_name: o.buyer_name || 'Anita Sharma',
+        status: o.status,
+        otp: o.otp || '1234',
+        created_at: o.created_at || 'Just now'
+      };
+    });
   }
 
-  if (path.includes('/accept/') && method === 'PUT') {
-    const parts = path.split('/');
-    const orderId = parseInt(parts[4]);
-    const allOrders = getStoredOrders().map(o => o.id === orderId ? { ...o, status: 'Accepted' } : o);
+  if (path.includes('/accept') && method === 'PUT') {
+    const match = path.match(/accept\/(\d+)/);
+    const orderId = match ? parseInt(match[1]) : parseInt(path.split('/').pop());
+    const allOrders = getStoredOrders().map(o => (o.id === orderId || o.order_id === orderId) ? { ...o, status: 'Accepted by Courier' } : o);
     saveStoredOrders(allOrders);
-    return { success: true, status: 'Accepted' };
+    return { success: true, status: 'Accepted by Courier', order_id: orderId };
   }
 
-  if (path.includes('/ship/') && method === 'PUT') {
-    const parts = path.split('/');
-    const orderId = parseInt(parts[4]);
-    const allOrders = getStoredOrders().map(o => o.id === orderId ? { ...o, status: 'Shipped' } : o);
+  if (path.includes('/ship') && method === 'PUT') {
+    const match = path.match(/ship\/(\d+)/);
+    const orderId = match ? parseInt(match[1]) : parseInt(path.split('/').pop());
+    const allOrders = getStoredOrders().map(o => (o.id === orderId || o.order_id === orderId) ? { ...o, status: 'Shipped' } : o);
     saveStoredOrders(allOrders);
-    return { success: true, status: 'Shipped' };
+    return { success: true, status: 'Shipped', order_id: orderId };
   }
 
-  if (path.includes('/deliver/') && method === 'PUT') {
-    const parts = path.split('/');
-    const orderId = parseInt(parts[4]);
-    const allOrders = getStoredOrders().map(o => o.id === orderId ? { ...o, status: 'Delivered' } : o);
+  if (path.includes('/deliver') && method === 'PUT') {
+    const match = path.match(/deliver\/(\d+)/);
+    const orderId = match ? parseInt(match[1]) : parseInt(path.split('/').pop());
+    const allOrders = getStoredOrders().map(o => (o.id === orderId || o.order_id === orderId) ? { ...o, status: 'Delivered' } : o);
     saveStoredOrders(allOrders);
-    return { success: true, status: 'Delivered', message: 'OTP verified successfully' };
+    return { success: true, status: 'Delivered', order_id: orderId, message: 'OTP verified successfully' };
+  }
+
+  // Buyer Orders fallback
+  if (path.startsWith('/buyer/') && path.endsWith('/orders')) {
+    const prods = getStoredProducts();
+    const prodsMap = {};
+    prods.forEach(p => { prodsMap[p.id] = p; });
+    return getStoredOrders().map(o => ({
+      id: o.id,
+      order_id: o.id,
+      product_name: o.product_name || prodsMap[o.product_id]?.name || 'Handcrafted Heritage Craft',
+      quantity: o.quantity || 1,
+      total_amount: o.total_amount || 549,
+      order_value: o.total_amount || 549,
+      status: o.status,
+      artisan_name: o.artisan_name || 'Meenakshi Bai',
+      created_at: o.created_at || 'Just now'
+    }));
   }
 
   // 9. Admin Stats
@@ -438,7 +542,23 @@ function handleFallback(endpoint, options = {}) {
     };
   }
 
-  if (path === '/admin/orders') return getStoredOrders();
+  if (path === '/admin/orders') {
+    const prods = getStoredProducts();
+    const prodsMap = {};
+    prods.forEach(p => { prodsMap[p.id] = p; });
+    return getStoredOrders().map(o => ({
+      id: o.id,
+      order_id: o.id,
+      product_name: o.product_name || prodsMap[o.product_id]?.name || 'Handcrafted Heritage Craft',
+      quantity: o.quantity || 1,
+      total_amount: o.total_amount || 549,
+      order_value: o.total_amount || 549,
+      status: o.status,
+      buyer_name: o.buyer_name || 'Anita Sharma',
+      artisan_name: o.artisan_name || 'Meenakshi Bai',
+      created_at: o.created_at || 'Recent'
+    }));
+  }
   if (path === '/admin/artisans') return FALLBACK_ARTISANS;
   if (path === '/admin/buyers') return FALLBACK_BUYERS;
   if (path === '/admin/couriers') return FALLBACK_COURIERS;
