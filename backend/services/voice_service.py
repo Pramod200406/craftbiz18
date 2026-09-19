@@ -363,38 +363,88 @@ def extract_product_details(transcription: str, translated_text: str = None) -> 
         detected_material = "Seasoned Eco-Bamboo & Cane"
 
     # 3. Numeric Extractions (Cost, Selling Price, Quantity)
-    cost_m = re.search(
-        r'(?:production\s*cost|manufacturing\s*cost|cost\s*price|cost|kharcha|vechcha|laagat|adike|ವೆಚ್ಚ|ಖರ್ಚು|लागत)\D*?(\d+)',
-        combined
+    # Match cost after keyword (e.g. "cost 350", "production cost ₹400", "laagat 250")
+    cost_m1 = re.search(
+        r'(?:production\s*cost|manufacturing\s*cost|making\s*cost|cost\s*price|cost|kharcha|vechcha|laagat|lagat|banane\s*me|खर्च|लागत|ವೆಚ್ಚ)\s*[:=iswasofin]*\s*(?:rs\.?|inr|₹|rupees|rupaye)?\s*(\d+(?:\.\d+)?)',
+        combined, re.IGNORECASE
     )
-    price_m = re.search(
-        r'(?:selling\s*price|selling\s*rate|selling|sell\s*for|market\s*price|price|rate|dar|bele|kimat|moolya|ಬೆಲೆ|ದರ|कीमत|बिक्री)\D*?(\d+)',
-        combined
+    # Match cost before keyword (e.g. "350 rupees cost", "400 rs production cost", "250 ki laagat")
+    cost_m2 = re.search(
+        r'(?:rs\.?|inr|₹)?\s*(\d+(?:\.\d+)?)\s*(?:rs\.?|inr|₹|rupees|rupaye)?\s*(?:production\s*cost|manufacturing\s*cost|making\s*cost|cost|kharcha|vechcha|laagat|lagat|banane\s*me|खर्च|लागत|की\s*लागत|ವೆಚ್ಚ)',
+        combined, re.IGNORECASE
     )
+
+    # Match selling price after keyword (e.g. "selling price 500", "sell for ₹650", "price 600", "bechna 500")
+    price_m1 = re.search(
+        r'(?:selling\s*price|selling\s*rate|sell\s*for|sell\s*at|market\s*price|bickri|bechna|price|rate|dar|bele|kimat|keemat|moolya|ಬೆಲೆ|ದರ|कीमत|भाव|बिक्री)\s*[:=iswasofin]*\s*(?:rs\.?|inr|₹|rupees|rupaye)?\s*(\d+(?:\.\d+)?)',
+        combined, re.IGNORECASE
+    )
+    # Match selling price before keyword (e.g. "500 rupees selling price", "650 me bechna", "600 price")
+    price_m2 = re.search(
+        r'(?:rs\.?|inr|₹)?\s*(\d+(?:\.\d+)?)\s*(?:rs\.?|inr|₹|rupees|rupaye)?\s*(?:में|मे)?\s*(?:selling\s*price|selling\s*rate|sell\s*for|sell\s*at|bickri|bechna|me\s*bechna|me\s*bikega|price|rate|dar|bele|kimat|keemat|ಬೆಲೆ|ದರ|कीमत|बिक्री|बेचना)',
+        combined, re.IGNORECASE
+    )
+
+    # Match quantity before keyword (e.g. "20 pieces", "15 pcs", "10 units", "5 piece", "25 पीस")
     qty_m1 = re.search(
-        r'(\d+)\s*(?:pieces|pcs|units|nagalu|nagas|items|pieces available|units available|stock|ನಗಗಳು|ಸಂಖ್ಯೆ|पीस|पीसेस)',
-        combined
+        r'(\d+)\s*(?:pieces|pcs|units|nagalu|nagas|items|piece|पीस|पीसेस|नग|ಸಂಖ್ಯೆ)',
+        combined, re.IGNORECASE
     )
+    # Match quantity after keyword (e.g. "quantity 20", "qty: 15", "stock 50")
     qty_m2 = re.search(
-        r'(?:quantity|qty|units|pieces|count|sankhya|stock|nagalu)\D*?(\d+)',
-        combined
+        r'(?:quantity|qty|units|pieces|count|sankhya|stock|nagalu|संख्या|पीस)\s*[:=iswasofin]*\s*(\d+)',
+        combined, re.IGNORECASE
     )
 
-    all_nums = [float(n) for n in re.findall(r'\b\d+\b', combined)]
+    # Generic numbers fallback
+    all_raw_nums = [float(n) for n in re.findall(r'(?:rs\.?|inr|₹)?\s*(\d+(?:\.\d+)?)', combined) if float(n) > 0]
 
-    cost = float(cost_m.group(1)) if cost_m else (all_nums[0] if len(all_nums) > 0 else 350.0)
-    price = float(price_m.group(1)) if price_m else (all_nums[1] if len(all_nums) > 1 else round(cost * 1.4))
-    qty = int(qty_m1.group(1)) if qty_m1 else (int(qty_m2.group(1)) if qty_m2 else (int(all_nums[-1]) if len(all_nums) > 2 else 10))
+    # Resolve Cost
+    cost = None
+    if cost_m1:
+        cost = float(cost_m1.group(1))
+    elif cost_m2:
+        cost = float(cost_m2.group(1))
+
+    # Resolve Price
+    price = None
+    if price_m1:
+        price = float(price_m1.group(1))
+    elif price_m2:
+        price = float(price_m2.group(1))
+
+    # Resolve Quantity
+    qty = 10
+    if qty_m1:
+        qty = int(qty_m1.group(1))
+    elif qty_m2:
+        qty = int(qty_m2.group(1))
+
+    # Smart number resolution if regex didn't catch specific keywords
+    if cost is None and price is None:
+        if len(all_raw_nums) >= 2:
+            cost = min(all_raw_nums[0], all_raw_nums[1])
+            price = max(all_raw_nums[0], all_raw_nums[1])
+            if len(all_raw_nums) >= 3 and qty == 10:
+                qty = int(all_raw_nums[2])
+        elif len(all_raw_nums) == 1:
+            cost = all_raw_nums[0]
+            price = round(cost * 1.45)
+        else:
+            cost = 350.0
+            price = 550.0
+    elif cost is None and price is not None:
+        cost = round(price / 1.4)
+    elif cost is not None and price is None:
+        price = round(cost * 1.45)
 
     if price <= cost:
-        selling = round(cost * 1.38)
-    else:
-        selling = price
+        price = round(cost * 1.45)
 
     # 4. Extract Product Name in Clean Title Case
     name_source = (translated_text or transcription).strip()
-    first_phrase = re.split(r'[,.\n\r;]|(?:\s+made\s+from)|(?:\s+with\s+)|(?:\s+cost\s+)|(?:\s+manufacturing\s+)', name_source, flags=re.IGNORECASE)[0].strip()
-    clean_name = re.sub(r'^(this is|i have|here is|authentic|handmade|traditional|genuine)\s+', '', first_phrase, flags=re.IGNORECASE).strip()
+    first_phrase = re.split(r'[,.\n\r;]|(?:\s+made\s+from)|(?:\s+with\s+)|(?:\s+cost\s+)|(?:\s+manufacturing\s+)|(?:\s+price\s+)|(?:\s+laagat\s+)', name_source, flags=re.IGNORECASE)[0].strip()
+    clean_name = re.sub(r'^(this is|i have|here is|authentic|handmade|traditional|genuine|yeh ek|yeh|ye|humne|hum)\s+', '', first_phrase, flags=re.IGNORECASE).strip()
 
     if len(clean_name) < 4 or len(clean_name) > 60:
         clean_name = f"Authentic Handcrafted {detected_category}"
@@ -402,12 +452,19 @@ def extract_product_details(transcription: str, translated_text: str = None) -> 
     # 5. Generate NLP SEO-friendly descriptions in English and Hindi
     seo = generate_seo_descriptions(clean_name.title(), detected_category, detected_material, transcription)
 
+    # Enhance descriptions with artisan's voice narrative
+    if transcription.strip():
+        artisan_note_en = f"\n\n🌿 Artisan's Craft Note:\n\"{translated_text.strip() if translated_text else transcription.strip()}\""
+        artisan_note_hi = f"\n\n🌿 कारीगर का विवरण:\n\"{translated_hindi.strip() if translated_hindi else transcription.strip()}\""
+        seo["description_en"] = seo["description_en"] + artisan_note_en
+        seo["description_hi"] = seo["description_hi"] + artisan_note_hi
+
     return {
         "name": clean_name.title(),
         "category": detected_category,
         "material": detected_material,
         "production_cost": float(cost),
-        "suggested_selling_price": float(selling),
+        "suggested_selling_price": float(price),
         "quantity": max(1, qty),
         "confidence": 0.95,
         "original_text": transcription,

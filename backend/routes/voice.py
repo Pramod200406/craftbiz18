@@ -30,7 +30,8 @@ async def transcribe_voice(file: UploadFile = File(...)):
     )
 
 @router.post("/voice/extract-details", response_model=VoiceExtractResponse)
+@router.post("/voice/extract", response_model=VoiceExtractResponse)
 def extract_details(data: VoiceExtractRequest):
-    transcription = (data.transcription or "").strip()
+    transcription = (data.transcription or data.text or "").strip()
     details = extract_product_details(transcription)
     return VoiceExtractResponse(**details)

@@ -192,6 +192,7 @@ class TranscribeResponse(BaseModel):
 
 class VoiceExtractRequest(BaseModel):
     transcription: Optional[str] = ""
+    text: Optional[str] = ""
 
 class VoiceExtractResponse(BaseModel):
     name: str
