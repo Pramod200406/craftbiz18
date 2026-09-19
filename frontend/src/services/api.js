@@ -259,18 +259,96 @@ function handleFallback(endpoint, options = {}) {
     };
   }
 
-  // 6. AI Matching
-  if (path === '/matching/recommend') {
+  // 6. AI Buyer-Artisan Matching
+  if (path.includes('/matches') || path === '/matching/recommend') {
     const prods = getStoredProducts();
-    return prods.slice(0, 4).map((p, idx) => ({
-      product: p,
-      compatibility_score: 96 - idx * 3,
-      match_reasons: [
-        'Direct alignment with buyer price range (₹400 - ₹15,000)',
-        'GI Heritage authenticity score 95%+',
-        'Artisan production capacity matches procurement volume'
-      ]
-    }));
+    const filterCat = (queryParams.get('category') || '').toLowerCase();
+    const minBudget = parseFloat(queryParams.get('min_budget')) || 300;
+    const maxBudget = parseFloat(queryParams.get('max_budget')) || 15000;
+    const targetKw = (queryParams.get('target_product') || '').toLowerCase();
+    const reqQty = parseInt(queryParams.get('quantity')) || 10;
+
+    const matchedList = prods.map((prod, idx) => {
+      const prodCat = (prod.category || '').toLowerCase();
+      const prodName = (prod.name || '').toLowerCase();
+      const prodDesc = (prod.description || '').toLowerCase();
+      const unitPrice = parseFloat(prod.selling_price) || 500;
+
+      let score = 25;
+
+      // Category fit
+      let catReason = 'Handcrafted Artisan Category';
+      if (filterCat && filterCat !== 'all') {
+        if (prodCat.includes(filterCat) || filterCat.includes(prodCat)) {
+          score += 30;
+          catReason = `Direct category match (${prod.category})`;
+        } else {
+          score += 2;
+          catReason = `Alternative category (${prod.category})`;
+        }
+      } else {
+        score += 18;
+      }
+
+      // Keyword match
+      let kwReason = 'Artisanal Heritage Work';
+      if (targetKw) {
+        if (prodName.includes(targetKw) || prodDesc.includes(targetKw)) {
+          score += 22;
+          kwReason = `Keyword match for '${targetKw}'`;
+        } else {
+          score += 3;
+        }
+      } else {
+        score += 12;
+      }
+
+      // Budget fit
+      let budgetReason = `Unit price ₹${unitPrice} matches budget bracket`;
+      if (unitPrice >= minBudget && unitPrice <= maxBudget) {
+        score += 20;
+        budgetReason = `Unit price ₹${unitPrice} comfortably inside budget [₹${minBudget} - ₹${maxBudget}]`;
+      } else if (unitPrice < minBudget) {
+        score += 15;
+        budgetReason = `High-value rate (₹${unitPrice}/unit, below budget ceiling)`;
+      } else if (unitPrice <= maxBudget * 1.15) {
+        score += 8;
+        budgetReason = `Consignment rate close to budget threshold`;
+      } else {
+        score += 2;
+        budgetReason = `Price ₹${unitPrice} exceeds budget ceiling of ₹${maxBudget}`;
+      }
+
+      // Capacity & Logistics fit
+      const availQty = prod.available_quantity || 15;
+      let capReason = availQty >= reqQty 
+        ? `Ready stock (${availQty} units) fulfills batch size (${reqQty})`
+        : `Artisan monthly capacity covers requirement`;
+      score += (availQty >= reqQty ? 8 : 4);
+
+      const finalScore = Math.min(99, Math.max(58, Math.round(score)));
+
+      const explanation = `AI Match ${finalScore}%: ${catReason}. ${kwReason}. ${budgetReason}. ${capReason}. Express state-wide courier corridor verified.`;
+
+      return {
+        product_id: prod.id,
+        product_name: prod.name,
+        category: prod.category,
+        selling_price: prod.selling_price,
+        production_cost: prod.production_cost || Math.round(prod.selling_price * 0.65),
+        available_quantity: prod.available_quantity || 15,
+        artisan_id: prod.artisan_id || 1,
+        artisan_name: prod.artisan_name || 'Meenakshi Bai',
+        artisan_location: prod.artisan_location || 'Karnataka, India',
+        image_url: prod.professional_image_url || prod.enhanced_image_url || prod.image_url,
+        match_score: finalScore,
+        ai_explanation: explanation,
+        authenticity_score: prod.authenticity_score || 96
+      };
+    });
+
+    matchedList.sort((a, b) => b.match_score - a.match_score);
+    return matchedList;
   }
 
   // 7. Orders
@@ -339,14 +417,24 @@ function handleFallback(endpoint, options = {}) {
   if (path === '/admin/stats') {
     const prods = getStoredProducts();
     const orders = getStoredOrders();
+    const gmv = orders.reduce((sum, o) => sum + (o.total_amount || 0), 0);
+    const active = orders.filter(o => o.status !== 'Delivered').length;
     return {
-      total_artisans: FALLBACK_ARTISANS.length,
-      total_buyers: FALLBACK_BUYERS.length,
-      total_couriers: FALLBACK_COURIERS.length,
-      total_products: prods.length,
+      status: 'active',
+      system_version: 'CRAFTBIZ AI v2.6 (SIH 2026)',
+      artisans_count: FALLBACK_ARTISANS.length,
+      buyers_count: FALLBACK_BUYERS.length,
+      couriers_count: FALLBACK_COURIERS.length,
+      products_count: prods.length,
       total_orders: orders.length,
-      platform_gmv: orders.reduce((sum, o) => sum + (o.total_amount || 0), 0),
-      avg_fair_wage_score: 9.6
+      active_orders: active,
+      delivered_orders: orders.length - active,
+      total_revenue: gmv,
+      platform_gmv: gmv,
+      avg_authenticity: 96.5,
+      avg_fair_price: 9.6,
+      avg_fair_wage_score: 9.6,
+      craft_clusters: ['Channapatna', 'Bankura', 'Varanasi', 'Bidar', 'Kutch', 'Pochampally']
     };
   }
 
@@ -656,18 +744,26 @@ export const api = {
     }),
 
   // Matching
-  getBuyerMatches: (buyerId, budgetMin, budgetMax, preferredCategory, limit = 5) =>
-    request('/matching/recommend', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        buyer_id: buyerId,
-        budget_min: budgetMin,
-        budget_max: budgetMax,
-        preferred_category: preferredCategory,
-        limit,
-      }),
-    }),
+  getBuyerMatches: (buyerId, paramsOrMinBudget = {}, maybeMaxBudget, maybeCategory, limit = 10) => {
+    let queryParams = {};
+    if (paramsOrMinBudget && typeof paramsOrMinBudget === 'object') {
+      queryParams = { ...paramsOrMinBudget };
+    } else {
+      if (paramsOrMinBudget !== undefined) queryParams.min_budget = paramsOrMinBudget;
+      if (maybeMaxBudget !== undefined) queryParams.max_budget = maybeMaxBudget;
+      if (maybeCategory !== undefined) queryParams.category = maybeCategory;
+    }
+
+    const qs = new URLSearchParams();
+    if (queryParams.category && queryParams.category !== 'all') qs.append('category', queryParams.category);
+    if (queryParams.min_budget) qs.append('min_budget', queryParams.min_budget);
+    if (queryParams.max_budget) qs.append('max_budget', queryParams.max_budget);
+    if (queryParams.target_product) qs.append('target_product', queryParams.target_product);
+    if (queryParams.quantity) qs.append('quantity', queryParams.quantity);
+
+    const queryStr = qs.toString() ? `?${qs.toString()}` : '';
+    return request(`/buyer/${buyerId || 1}/matches${queryStr}`);
+  },
 
   // Artisan Registration & Login
   registerArtisan: (data) =>
